@@ -1,0 +1,14 @@
+[Unit]
+Description=minidlna on Docker
+Requires=minidlna.docker
+After=minidlna.docker
+
+[Service]
+Restart=always
+RestartSec=3
+ExecStartPre=/bin/sh -c "/usr/bin/docker rm -f minidlna 2> /dev/null || /bin/true"
+ExecStart=/usr/bin/sudo docker run -d -v /media/hdd:/media/hdd -v /var/cache/minidlna:/var/cache/minidlna -v /var/log/minidlna.log:/var/log/minidlna.log -p 8200:8200 -p 1900:1900/udp --net host minidlna.docker minidlnad -S
+ExecStop=/usr/bin/docker stop minidlna.docker
+
+[Install]
+WantedBy=multi-user.target
