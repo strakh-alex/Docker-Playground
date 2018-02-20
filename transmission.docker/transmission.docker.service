@@ -1,0 +1,14 @@
+[Unit]
+Description=Transmission on Docker
+Requires=transmission.docker
+After=transmission.docker
+
+[Service]
+Restart=always
+RestartSec=3
+ExecStartPre=/bin/sh -c "/usr/bin/docker rm -f transmission.docker 2> /dev/null || /bin/true"
+ExecStart=/usr/bin/sudo docker run -d -p 9091:9091 -p 51413:51413/udp -v /media/hdd:/media/hdd transmission.docker transmission-daemon -f
+ExecStop=/usr/bin/docker stop transmission.docker
+
+[Install]
+WantedBy=multi-user.target
